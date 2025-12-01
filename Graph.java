@@ -141,3 +141,4 @@ public int findRoot() {
     // return the value of the root vertex
     return vertexValues.get(rootIndex);
   }
+}
