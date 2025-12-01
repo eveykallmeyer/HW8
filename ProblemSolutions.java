@@ -80,12 +80,15 @@ class ProblemSolutions {
         // Build directed graph's adjacency list
         ArrayList<Integer>[] adj = getAdjList(numExams, prerequisites); 
 
-        int [] inDegree = new int[numNodes];
+        // create an array to count the incoming edges for each node
+        int[] inDegree = new int[numNodes];
 
+        // build the in-degree array
         for (int[] edge : prerequisites) {
             inDegree[edge[1]]++;
         }
 
+        // put nodes with no prerequisites into a queue
         java.util.Queue<Integer> queue = new java.util.LinkedList<>();
         for (int i = 0; i < numNodes; i++) {
             if (inDegree[i] == 0) {
@@ -93,20 +96,27 @@ class ProblemSolutions {
             }
         }
 
+        // count how many exams were taken
         int processed = 0;
 
+        // continue in the queue, and remove exams ready to be taken
         while (!queue.isEmpty()) {
             int current = queue.poll();
+            // increase the count of exams taken
             processed++;
 
+            // look at all exams that depend on the current exam
             for (int neighbor : adj[current]) {
+                // decrease the amount of prerequisites not met
                 inDegree[neighbor]--;
+                // if it has no prerequisites, add it to the queue
                 if (inDegree[neighbor] == 0) {
                     queue.offer(neighbor);
                 }
             }
         }
         
+        // return true if all exams are processed
         return processed == numNodes;
 
     }
@@ -215,9 +225,40 @@ class ProblemSolutions {
             }
         }
 
-        // YOUR CODE GOES HERE - you can add helper methods, you do not need
-        // to put all code in this method.
-        return -1;
+        // create an array to count which nodes have been explored already
+        boolean[] visited = new boolean[numNodes];
+        // count the number of connected components in the graph
+        int numGroups = 0;
+
+        // loop through every node in the graph
+        for (int node = 0; node < numNodes; node++) {
+            // if it has not been visited, it belongs to a new group
+            if (!visited[node]) {
+                // increase the count of groups
+                numGroups++;
+                dfs(node, graph, visited);
+            }
+        }
+
+        // return the number of groups found
+        return numGroups;
+
     }
 
+    // Helper Method
+    private void dfs(int node, Map<Integer, List<Integer>> graph, boolean[] visited) {
+        
+        visited[node] = true;
+
+        List<Integer> neighbors = graph.get(node);
+        if (neighbors == null) {
+            return;
+        }
+
+        for (int neighbor : neighbors) {
+            if (!visited[neighbor]) {
+                dfs(neighbor, graph, visited);
+            }
+        }
+    }
 }
