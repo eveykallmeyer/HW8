@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   ADD YOUR NAME / SECTION NUMBER HERE
+ *   Evey Kallmeyer / COMP 272/400C-002
  *
  *   This java file contains the problem solutions of canFinish and
  *   numGroups methods.
@@ -72,17 +72,42 @@ class ProblemSolutions {
      * @return boolean          - True if all exams can be taken, else false.
      */
 
-    public boolean canFinish(int numExams, 
-                             int[][] prerequisites) {
+    public boolean canFinish(int numExams, int[][] prerequisites) {
       
-        int numNodes = numExams;  // # of nodes in graph
+        // count the number of nodes (exams) in the graph
+        int numNodes = numExams;
 
         // Build directed graph's adjacency list
-        ArrayList<Integer>[] adj = getAdjList(numExams, 
-                                        prerequisites); 
+        ArrayList<Integer>[] adj = getAdjList(numExams, prerequisites); 
 
-        // ADD YOUR CODE HERE - ADD YOUR NAME / SECTION AT TOP OF FILE
-        return false;
+        int [] inDegree = new int[numNodes];
+
+        for (int[] edge : prerequisites) {
+            inDegree[edge[1]]++;
+        }
+
+        java.util.Queue<Integer> queue = new java.util.LinkedList<>();
+        for (int i = 0; i < numNodes; i++) {
+            if (inDegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+
+        int processed = 0;
+
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            processed++;
+
+            for (int neighbor : adj[current]) {
+                inDegree[neighbor]--;
+                if (inDegree[neighbor] == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        
+        return processed == numNodes;
 
     }
 
