@@ -102,14 +102,14 @@ public class Graph {
    * 
    */
   
-  public int findRoot() {
+public int findRoot() {
 
     // count how many incoming edges for each vertex
     int[] incoming = new int[numVertices];
 
     // loop through every vertex as a potential source of edges
     for (int source = 0; source < numVertices; source++) {
-      //increase the source's edge count for every neighbor that source points to
+      // increase the destination's edge count for every neighbor that source points to
       for (int destination : adjListArr[source]) {
         incoming[destination]++;
       }
@@ -121,22 +121,23 @@ public class Graph {
     // search for the root (the vertex with zero incoming edges)
     for (int i = 0; i < numVertices; i++) {
       if (incoming[i] == 0) {
+
         // if there are multiple vertices without incoming edges, there are multiple roots
-        if (rootIndex != -1)
+        if (rootIndex != -1) {
           // return -1 because there may not be more than one root
           return -1;
+        }
+
+        // define the root found
+        rootIndex = i;
       }
-      // define the root found
-      rootIndex = i;
     }
-  } 
 
-  // return -1 if no root was found
-  if (rootIndex == -1) {
-    return -1;
+    // return -1 if no root was found
+    if (rootIndex == -1) {
+      return -1;
+    }
+
+    // return the value of the root vertex
+    return vertexValues.get(rootIndex);
   }
-
-  // return the value of the root vertex
-  return vertexValues.get(rootIndex);
-
-}
